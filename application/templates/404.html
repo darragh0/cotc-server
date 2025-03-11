@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+404 - Page Not Found
+{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="../static/css/404.css" />
+{% endblock %}
+
+{% block content %}
+<div class="error">
+  <div class="error__code">404</div>
+  <div class="error__message">PAGE_NOT_FOUND</div>
+  <div class="error__details">
+    <div class="error__line">
+      <span class="error__prompt">></span> ERROR: The requested file could not be located.
+    </div>
+    <div class="error__line">
+      <span class="error__prompt">></span> SYSTEM: Scanning for alternative paths...
+    </div>
+    <div class="error__line">
+      <span class="error__prompt">></span> SUGGESTION: Return to <a href="/" class="error__link">main console</a>
+    </div>
+    <div class="error__line error__line--blink">
+      <span class="error__prompt">></span> _
+    </div>
+  </div>
+</div>
+{% endblock %}

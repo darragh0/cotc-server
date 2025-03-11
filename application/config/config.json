@@ -1,0 +1,24 @@
+{
+  "app": {
+    "flask": {
+      "ENVIRONMENT": "development",
+      "SERVER_NAME": "127.0.0.1:8080",
+      "DEBUG": true,
+      "SQLALCHEMY_DATABASE_URI": "sqlite:///db.sqlite3"
+    }
+  },
+  "argparse": {
+    "program_name": "web-app",
+    "version": "0.1.0",
+    "description": "A web application for monitoring and managing devices"
+  },
+  "logging": {
+    "output_dir": "logs",
+    "file_name": "collector.log",
+    "enabled_handlers": [
+      "stdout",
+      "stderr",
+      "file"
+    ]
+  }
+}

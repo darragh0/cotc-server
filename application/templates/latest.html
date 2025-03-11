@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+Latest Metrics
+{% endblock %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="../static/css/latest.css" />
+{% endblock %}
+
+{% block additional_js %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gaugeJS/dist/gauge.min.js" defer></script>
+<script type="text/javascript" src="../static/js/gauge.js" defer></script>
+{% endblock %}
+
+{% block content %}
+<div id="latest">
+  {% for s in snapshots %}
+  <div class="latest__snapshot">
+    <div class="latest__snapshot__origin">
+      <div class="latest__snapshot__metric-container">
+        <div>Device</div>
+        <div>{{ s.device.name}}</div>
+        <div>Time</div>
+        <div>{{ s.timestamp }}</div>
+      </div>
+    </div>
+    <div class="latest__snapshot__data">
+      <div class="latest__snapshot__metric-container">
+        {% for m in s.metrics %}
+        <div>{{ m.name }}</div>
+        <div>
+          {{ "{:,.2f}".format(m.value) }} {{ m.unit }}
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% if gauge %}
+  <div id="latest__gauge">
+    <canvas id="latest__gauge__canvas" data-value="{{ gauge.value }}"></canvas>
+    <div id="latest__gauge__label">{{ gauge.device }} :: {{ gauge.label }} ({{ "{:,.2f}".format(gauge.value) }} %)</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

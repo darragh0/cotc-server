@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="../static/ico/favicon.ico" />
+  <link rel="stylesheet" href="../static/css/base.css" />
+  {% block additional_css %}{% endblock %}
+  <script type="text/javascript" src="../static/js/base.js" defer></script>
+  {% block additional_js %}{% endblock %}
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  <header>
+    <h1>Device Metrics Dashboard</h1>
+  </header>
+  <div class="update-notification">
+    > UPDATE RECEIVED<br />
+    > REFRESHING CONSOLE ...
+  </div>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+
+</html>
