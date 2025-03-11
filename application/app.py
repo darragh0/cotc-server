@@ -8,11 +8,11 @@ from requests import status_codes
 from sqlalchemy.exc import OperationalError
 
 from application.base import AppBase
-from application.common import app_route
+from application.common import app_route, validate_int, validate_time
 from application.figs import Gauge
 
 if TYPE_CHECKING:
-    from application.db.models import MetricSnapshot
+    from application.db.models import Device, MetricSnapshot
 
 
 class App(AppBase):
@@ -46,12 +46,39 @@ class App(AppBase):
     @app_route("/all", "/history")
     def route_history(self) -> str:
         try:
+            start_time: dt | None = validate_time(request.args.get("start_time", ""))
+            end_time: dt | None = validate_time(request.args.get("end_time", ""))
+            device_id: int | None = validate_int(request.args.get("device", ""))
+
+            snapshots: list[MetricSnapshot]
             with self.db:
-                snapshots: list[MetricSnapshot] = self.db.get_snapshots(desc=True)
-                return render_template("history.html", snapshots=snapshots)
+                devices: list[Device] = self.db.get_devices()
+
+                if (
+                    device_id is not None
+                    or start_time is not None
+                    or end_time is not None
+                ):
+                    snapshots = self.db.get_filtered_snapshots(
+                        device_id=device_id,
+                        start_time=start_time,
+                        end_time=end_time,
+                        desc=True,
+                    )
+                else:
+                    snapshots = self.db.get_snapshots(desc=True)
+
+                return render_template(
+                    "history.html",
+                    snapshots=snapshots,
+                    devices=devices,
+                    selected_device=device_id,
+                    start_time=start_time,
+                    end_time=end_time,
+                )
         except OperationalError:
             self.logger.exception("Error getting snapshots from database")
-            return render_template("history.html", snapshots=[])
+            return render_template("history.html", snapshots=[], devices=[])
 
     @app_route("/metrics", methods=["POST"])
     def route_json(self) -> ServerResponse:
@@ -69,7 +96,6 @@ class App(AppBase):
                 return ret
 
         self.last_update = dt.now()
-
         return ret
 
     @app_route("/check_update")

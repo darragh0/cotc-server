@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 from functools import wraps
 from typing import Any, Callable
 
@@ -36,3 +37,25 @@ def print_snapshots(snapshots: list[MetricSnapshot]) -> None:
             print(f"        {metric}")
 
     print("\n\033[1;92m============================\033[0;0m\n")
+
+
+def validate_time(time_str: str) -> dt | None:
+    if time_str == "":
+        return None
+
+    try:
+        return dt.fromisoformat(time_str)
+    except ValueError:
+        current_app.logger.warning(f"Invalid time format: {time_str}")
+        return None
+
+
+def validate_int(int_str: str) -> int | None:
+    if int_str == "":
+        return None
+
+    try:
+        return int(int_str)
+    except ValueError:
+        current_app.logger.warning(f"Invalid integer format: {int_str}")
+        return None

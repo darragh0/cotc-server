@@ -11,6 +11,7 @@ from cotc_common.metrics import (
 )
 from cotc_common.types import ServerResponse
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import desc as sa_desc
 from sqlalchemy.exc import OperationalError
 
 from application.db.models import Base, Device, Metric, MetricSnapshot
@@ -119,7 +120,7 @@ class DB(SQLAlchemy):
     ) -> list[MetricSnapshot]:
         return (
             self.session.query(MetricSnapshot)
-            .order_by(MetricSnapshot.id.desc() if desc else MetricSnapshot.id.asc())
+            .order_by(sa_desc(MetricSnapshot.id) if desc else MetricSnapshot.id)
             .limit(n)
             .all()
         )
@@ -127,3 +128,56 @@ class DB(SQLAlchemy):
     def _addncommit(self, data: Metric | MetricSnapshot | Device) -> None:
         self.session.add(data)
         self.session.commit()
+
+    def get_filtered_snapshots(
+        self,
+        device_id: int | None = None,
+        start_time: dt | None = None,
+        end_time: dt | None = None,
+        n: int | None = None,
+        *,
+        desc: bool = False,
+    ) -> list[MetricSnapshot]:
+        """
+        Get snapshots filtered by device ID and/or time range
+
+        Args:
+            device_id (int | None): Optional device ID to filter by
+            start_time (dt | None): Optional start time to filter by
+            end_time (dt | None): Optional end time to filter by
+            desc (bool): Sort in descending order (by timestamp)
+
+        Returns:
+            list[MetricSnapshot]: List of filtered MetricSnapshot objects
+        """
+
+        query = self.session.query(MetricSnapshot)
+
+        if device_id:
+            query = query.filter(MetricSnapshot.device_id == device_id)
+
+        if start_time:
+            query = query.filter(MetricSnapshot.timestamp >= start_time)
+
+        if end_time:
+            query = query.filter(MetricSnapshot.timestamp <= end_time)
+
+        query = query.order_by(
+            sa_desc(MetricSnapshot.timestamp) if desc else MetricSnapshot.timestamp
+        )
+
+        return query.limit(n).all()
+
+    def get_devices(self, *, desc: bool = False) -> list[Device]:
+        """
+        Get all devices from the database
+
+        Returns:
+            List of Device objects
+        """
+
+        return (
+            self.session.query(Device)
+            .order_by(sa_desc(Device.name) if desc else Device.name)
+            .all()
+        )

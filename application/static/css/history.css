@@ -29,6 +29,127 @@
   background: linear-gradient(90deg, var(--terminal-green), transparent);
 }
 
+.filter-container {
+  background: var(--terminal-grey);
+  border: 2px solid var(--terminal-green);
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(38, 255, 161, 0.2);
+  padding: 1.5em;
+  margin-bottom: 2em;
+  position: relative;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2em;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filter-label {
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--terminal-green);
+  font-size: 0.9rem;
+}
+
+.filter-label::before {
+  content: ">> ";
+  color: var(--terminal-green);
+}
+
+.filter-select,
+.filter-input {
+  background-color: var(--terminal-black);
+  color: var(--terminal-white);
+  border: 1px solid var(--terminal-green);
+  border-radius: 3px;
+  padding: 0.6em;
+  font-family: "IBM Plex Mono", monospace;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+  border-color: var(--terminal-bright-green);
+  box-shadow: 0 0 10px var(--terminal-dim-green);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.8em;
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.filter-btn {
+  font-family: "IBM Plex Mono", monospace;
+  padding: 0.6em 1.2em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.filter-apply {
+  background-color: var(--terminal-green);
+  color: var(--terminal-black);
+}
+
+.filter-apply:hover {
+  background-color: var(--terminal-bright-green);
+  box-shadow: 0 0 10px var(--terminal-dim-green);
+}
+
+.filter-reset {
+  background-color: var(--terminal-black);
+  color: var(--terminal-red);
+  border: 1px solid var(--terminal-red);
+}
+
+.filter-reset:hover {
+  background-color: var(--terminal-red);
+  color: var(--terminal-black);
+  box-shadow: 0 0 10px rgba(255, 60, 65, 0.4);
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3em 1em;
+  color: var(--terminal-white);
+  gap: 1em;
+}
+
+.no-results-icon {
+  font-family: "VT323", monospace;
+  font-size: 2.5rem;
+  color: var(--terminal-red);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--terminal-red);
+  border-radius: 50%;
+}
+
+.empty-table {
+  border: 2px solid var(--terminal-red);
+  box-shadow: 0 0 20px rgba(255, 60, 65, 0.2);
+}
+
 .history__table-container {
   background: var(--terminal-grey);
   border: 2px solid var(--terminal-green);
@@ -235,6 +356,20 @@
     font-size: 1.5rem;
   }
 
+  .filter-form {
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .filter-actions {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .history__table th,
   .history__table td {
     padding: 0.5em;
@@ -254,5 +389,4 @@
     width: 95%;
     margin: 10% auto;
   }
-
 }

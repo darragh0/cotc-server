@@ -8,10 +8,48 @@ Metrics History
 <link rel="stylesheet" href="../static/css/history.css" />
 {% endblock %}
 
+{% block additional_js %}
+<script src="../static/js/history.js" defer></script>
+{% endblock %}
+
 {% block content %}
 <div id="history">
   <h2 class="history__title">Metrics History</h2>
-  <div class="history__table-container">
+
+  <div class="filter-container">
+    <form id="filter-form" method="GET" class="filter-form">
+      <div class="filter-group">
+        <label for="device-filter" class="filter-label">Device:</label>
+        <select id="device-filter" name="device" class="filter-select">
+          <option value="">All Devices</option>
+          {% for device in devices %}
+          <option value="{{ device.id }}" {% if selected_device==device.id %}selected{% endif %}>{{ device.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="start-time" class="filter-label">Start Time:</label>
+        <input type="datetime-local" id="start-time" name="start_time" class="filter-input"
+          value="{{ start_time if start_time else '' }}">
+      </div>
+
+      <div class="filter-group">
+        <label for="end-time" class="filter-label">End Time:</label>
+        <input type="datetime-local" id="end-time" name="end_time" class="filter-input"
+          value="{{ end_time if end_time else '' }}">
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit" class="filter-btn filter-apply">Apply Filters</button>
+        <button type="button" id="reset-filters" class="filter-btn filter-reset">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="history__table-container {% if not snapshots %}empty-table{% endif %}">
+    {% if snapshots %}
     <table class="history__table">
       <thead>
         <tr>
@@ -30,9 +68,7 @@ Metrics History
               {{ s.metrics|length }} metrics
               <span class="metrics-btn-icon">▶</span>
             </label>
-
             <input tabindex="-1" type="checkbox" id="modal-trigger-{{ loop.index }}" class="modal-checkbox" />
-
             <div class="modal">
               <label for="modal-trigger-{{ loop.index }}" class="modal-overlay"></label>
               <div class="modal-content">
@@ -69,6 +105,17 @@ Metrics History
         {% endfor %}
       </tbody>
     </table>
+    {% else %}
+    <div class="no-results">
+      <span class="no-results-icon">!</span>
+      {% if selected_device is not None %}
+      <p>No metrics found matching your filters</p>
+      {% else %}
+      <p>No metrics found</p>
+      {% endif %}
+      <button type="button" id="clear-filters" class="filter-btn filter-reset">Clear Filters</button>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
