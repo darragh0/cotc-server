@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   var grey = style.getPropertyValue("--terminal-grey");
   var purple = style.getPropertyValue("--terminal-purple");
   var dimPurple = style.getPropertyValue("--terminal-dim-purple");
+  var red = style.getPropertyValue("--terminal-red");
 
   var opts = {
     radiusScale: 1.05,
@@ -18,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     pointer: {
       length: 0.5,
       strokeWidth: 0.035,
-      color: purple
+      color: red
     },
   };
 

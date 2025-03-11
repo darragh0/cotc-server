@@ -2,6 +2,13 @@ const UPDATE_THRESHOLD_MS = 5000;
 const NOTIFICATION_DURATION_MS = 2500;
 const POLL_INTERVAL_MS = 5000;
 
+document.addEventListener("DOMContentLoaded", () => {
+  const title = document.getElementById("title");
+  title.addEventListener("click", () => {
+    window.location.href = "/";
+  });
+});
+
 function checkForUpdates() {
   fetch("/check_update")
     .then((response) => response.json())

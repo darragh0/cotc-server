@@ -118,8 +118,11 @@ h1 {
   font-size: 3rem;
   text-transform: uppercase;
   letter-spacing: 4px;
+  width: fit-content;
   color: var(--terminal-green);
   position: relative;
+  cursor: pointer;
+  margin: 0 auto;
 }
 
 h1::before {
