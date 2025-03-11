@@ -4,6 +4,11 @@ Flask web app that displays metrics from different sources (device metrics, weat
 ### To Run
 First, navigate to the root directory of this project (`cotc-server`).
 
+Then clone [this repo](https://github.com/darragh0/cotc-common) via:
+```sh
+git clone https://github.com/darragh0/cotc-common.git
+```
+
 If you have `uv` installed, you can use:
 ```sh
 uv venv
