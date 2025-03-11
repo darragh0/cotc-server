@@ -11,3 +11,6 @@ instance/
 # Logs
 application/logs/
 
+# Other
+cotc-common/
+
