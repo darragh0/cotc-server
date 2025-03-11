@@ -90,13 +90,16 @@ class App(AppBase):
         if not isinstance(json, list):
             return {"error": "Invalid JSON data"}, 400
 
+        resp: ServerResponse = {"status": "ok"}, 200
         for snapshot in json:
-            ret: ServerResponse = self.db.add_snapshot(snapshot)
+            ret = self.db.add_snapshot(snapshot)
             if ret[1] != status_codes.codes.ok:
                 return ret
+            device_name, rank = ret[0].popitem()
+            resp[0][device_name] = rank
 
         self.last_update = dt.now()
-        return ret
+        return resp
 
     @app_route("/check_update")
     def route_check_update(self) -> ServerResponse:

@@ -10,6 +10,7 @@ from cotc_common.metrics import (
     parse_snapshot_json,
 )
 from cotc_common.types import ServerResponse
+from cotc_common.util import PublisherRank
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc as sa_desc
 from sqlalchemy.exc import OperationalError
@@ -68,6 +69,7 @@ class DB(SQLAlchemy):
             timestamp=dt.fromisoformat(snapshot_json.timestamp),
             metrics=[],
         )
+        device_name: str
 
         try:
             with self:
@@ -78,9 +80,12 @@ class DB(SQLAlchemy):
                 )
                 if device is not None:
                     snapshot_schema.device_id = int(device.id)
+                    device_name = str(device.name)
+                    rank = self.get_device_rank(snapshot_schema.device_id, inc=True)
 
             if device is None:
-                device_name: str = snapshot_json.device.name
+                rank = PublisherRank.BEGINNER
+                device_name = snapshot_json.device.name
                 device_schema: DeviceSchema = DeviceSchema(name=device_name)
                 device = Device.from_json(device_schema)
                 with self:
@@ -110,7 +115,7 @@ class DB(SQLAlchemy):
                 "message": "Error saving JSON data to database",
             }, 500
 
-        return {"status": "success"}, 200
+        return {"status": "success", device_name: rank.name}, 200
 
     def get_snapshots(
         self,
@@ -181,3 +186,17 @@ class DB(SQLAlchemy):
             .order_by(sa_desc(Device.name) if desc else Device.name)
             .all()
         )
+
+    def get_device_rank(self, device_id: int, inc: bool = False) -> PublisherRank:
+        num_snapshots: int = (
+            self.session.query(MetricSnapshot).filter_by(device_id=device_id).count()
+        )
+
+        if inc:
+            num_snapshots += 1
+
+        for rank in PublisherRank:
+            if num_snapshots <= rank.value:
+                return rank
+
+        return PublisherRank.GOD
