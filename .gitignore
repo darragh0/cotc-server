@@ -1,6 +1,6 @@
 # Python-generated files
-*/.mypy_cache/
-*/__pycache__/
+.mypy_cache/
+__pycache_/
 
 # Python virtual environment
 .venv/
@@ -9,4 +9,5 @@
 instance/
 
 # Logs
-*/logs/
+logs/
+
